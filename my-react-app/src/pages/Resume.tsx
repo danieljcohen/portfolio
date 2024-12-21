@@ -1,54 +1,63 @@
 import React, { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import { AiOutlineDownload } from "react-icons/ai";
-import pdf from "../assets/resume.pdf";
-import "react-pdf/dist/esm/Page/AnnotationLayer.css";
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-const ResumeNew: React.FC = () => {
+pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+
+const Resume: React.FC = () => {
   const [width, setWidth] = useState<number>(1200);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setWidth(window.innerWidth);
-  }, []);
-  
-  return (
-    <div className="resume-section w-full">
-      <div className="flex justify-center relative my-4">
-        <a
-          href={pdf}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-primary text-white px-4 py-2 rounded flex items-center max-w-xs"
-        >
-          <AiOutlineDownload className="mr-2" />
-          Download CV
-        </a>
-      </div>
+    const handleResize = () => setWidth(window.innerWidth);
+    handleResize(); // Set initial width
+    window.addEventListener("resize", handleResize);
 
-      <div className="resume flex justify-center my-4">
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const pdf = "resume.pdf"; // Path to file in the public folder
+
+  return (
+    <div className="resume-container flex flex-col items-center bg-gray-900 min-h-screen py-10">
+      <div className="header-section mb-8">
+        <h1 className="text-4xl font-bold text-white text-center mb-8">
+          My <span className="text-purple-400">Resume</span>
+        </h1>
+        <p className="text-gray-300">View or download the document below.</p>
+      </div>
+      <div className="pdf-viewer w-full max-w-4xl bg-white rounded shadow-md flex justify-center items-start">
+        {loading && (
+          <div className="loading-spinner flex justify-center items-center h-48">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-purple-500 border-solid"></div>
+          </div>
+        )}
         <Document
           file={pdf}
-          onLoadError={(error) => console.error('Error while loading PDF:', error)}
-          className="flex justify-center"
+          onLoadSuccess={() => setLoading(false)}
+          onLoadError={(error) => console.error("Error loading PDF:", error)}
         >
-          <Page pageNumber={1} scale={width > 786 ? 1.7 : 0.6} />
+          <Page
+            pageNumber={1}
+            scale={width > 786 ? 1.5 : 0.9} // Adjusted scale to maintain good size
+            className="resume-page"
+            onRenderError={(error) => console.error("Render error:", error)}
+          />
         </Document>
       </div>
-
-      <div className="flex justify-center relative my-4">
+      <div className="download-btn mt-4">
         <a
           href={pdf}
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-primary text-white px-4 py-2 rounded flex items-center max-w-xs"
+          className="bg-purple-500 text-white px-6 py-3 rounded shadow mt-20 hover:bg-purple-400"
         >
-          <AiOutlineDownload className="mr-2" />
-          Download CV
+          Download Resume
         </a>
       </div>
     </div>
   );
 };
 
-export default ResumeNew;
+export default Resume;

@@ -2,8 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
 import About from './pages/About';
 import WorkExperience from './pages/WorkExperience';
-import Projects from './pages/Projects';
+import Projects from './pages/Projects/Projects';
 import Resume from './pages/Resume';
+import ProjectDetail from './pages/Projects/ProjectDetail';
+
 
 const App: React.FC = () => {
   return (
@@ -21,6 +23,7 @@ const App: React.FC = () => {
           <Route path="/" element={<About />} />
           <Route path="/work" element={<WorkExperience />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:projectName" element={<ProjectDetail />} />
           <Route path="/resume" element={<Resume />} />
         </Routes>
       </div>
