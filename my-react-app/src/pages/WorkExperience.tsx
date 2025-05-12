@@ -1,6 +1,6 @@
 import React from 'react';
 import esriLogo from '../assets/esri.png';
-import c1Logo from '../assets/c1.png';
+import awsLogo from '../assets/aws.svg';
 import dukeLogo from '../assets/duke.png';
 import goliathLogo from '../assets/goliath.jpg';
 
@@ -8,11 +8,11 @@ const WorkExperience: React.FC = () => {
   const experiences = [
     {
       title: 'Incoming Software Engineer Intern',
-      date: 'May 2024 – Aug 2024',
-      company: 'Capital One',
-      location: 'McLean, VA',
+      date: 'May 2025 – Aug 2025',
+      company: 'Amazon (AWS)',
+      location: 'New York, NY',
       bulletPoints: [], // No specific bullets provided yet
-      logo: c1Logo,
+      logo: awsLogo,
     },
     {
       title: 'Software Engineer Intern',
@@ -55,7 +55,7 @@ const WorkExperience: React.FC = () => {
   return (
     <div className="bg-gray-900 min-h-screen py-12 px-4">
       <h1 className="text-4xl font-bold text-white text-center mb-12">
-        My <span className="text-purple-400">Work Experience</span>
+        My Work <span className="text-purple-400">Experience</span>
       </h1>
       <div className="relative w-full max-w-5xl mx-auto">
         {/* Vertical Timeline Line */}

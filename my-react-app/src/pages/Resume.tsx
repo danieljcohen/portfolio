@@ -21,11 +21,10 @@ const Resume: React.FC = () => {
 
   return (
     <div className="resume-container flex flex-col items-center bg-gray-900 min-h-screen py-10">
-      <div className="header-section mb-8">
-        <h1 className="text-4xl font-bold text-white text-center mb-8">
+      <div className="header-section mb-4">
+        <h1 className="text-4xl font-bold text-white text-center mb-4">
           My <span className="text-purple-400">Resume</span>
         </h1>
-        <p className="text-gray-300">View or download the document below.</p>
       </div>
       <div className="pdf-viewer w-full max-w-4xl bg-white rounded shadow-md flex justify-center items-start">
         {loading && (
@@ -46,7 +45,7 @@ const Resume: React.FC = () => {
           />
         </Document>
       </div>
-      <div className="download-btn mt-4">
+      <div className="download-btn mt-8">
         <a
           href={pdf}
           target="_blank"
