@@ -35,7 +35,7 @@ const ProjectDetail: React.FC = () => {
   const projectDetails: Record<string, ProjectDetails> = {
     'psychaide': {
       title: 'PsychAIde',
-      date: 'April 2024',
+      date: 'Jan-May 2025',
       imgPath: psychaide,
       description: 'Worked as a product manager and developer to develop a comprehensive HIPAA-compliant web application designed for forensic psychologists and mental health professionals who conduct court-ordered evaluations.',
       challenge: 'Forensic psychologists face significant administrative burdens managing court-ordered evaluations, including document preparation, time tracking, and maintaining HIPAA compliance while handling sensitive case information.',
@@ -65,7 +65,7 @@ const ProjectDetail: React.FC = () => {
     },
     'petal-path': {
       title: 'Petal and Path',
-      date: 'November 2023',
+      date: 'Feb 2025',
       imgPath: pathPetal, // Replace with actual image
       description: 'An environmental conservation platform that enables hikers to identify and track invasive plant species, contributing to ecosystem preservation through crowdsourced data collection.',
       challenge: 'Invasive plant species are causing significant damage to local ecosystems, with studies showing a 25-40% reduction in native plant diversity in affected areas. Hikers often encounter these plants but lack the knowledge to identify them or a way to report sightings to relevant authorities.',
