@@ -11,14 +11,20 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
-        {/* Navigation Bar */}
-        <nav className="p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white flex justify-around shadow-md">
-          <div className="w-1/2 flex">
-            <NavLink to="/" className="px-4 py-2 rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">About</NavLink>
-          </div>
-          <NavLink to="/work" className="px-4 py-2 rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">Work Experience</NavLink>
-          <NavLink to="/projects" className="px-4 py-2 rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">Projects</NavLink>
-          <NavLink to="/resume" className="px-4 py-2 rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">Resume</NavLink>
+        {/* Navigation Bar - Updated for better mobile centering */}
+        <nav className="p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white flex flex-nowrap justify-center overflow-x-auto shadow-md">
+          <NavLink to="/" className="whitespace-nowrap px-3 sm:px-4 py-2 mx-1 text-center rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
+            About
+          </NavLink>
+          <NavLink to="/work" className="whitespace-nowrap px-3 sm:px-4 py-2 mx-1 text-center rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
+            Work Experience
+          </NavLink>
+          <NavLink to="/projects" className="whitespace-nowrap px-3 sm:px-4 py-2 mx-1 text-center rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
+            Projects
+          </NavLink>
+          <NavLink to="/resume" className="whitespace-nowrap px-3 sm:px-4 py-2 mx-1 text-center rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
+            Resume
+          </NavLink>
         </nav>
 
         {/* Main Content */}

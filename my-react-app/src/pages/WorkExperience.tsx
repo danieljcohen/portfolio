@@ -53,20 +53,26 @@ const WorkExperience: React.FC = () => {
   ];
 
   return (
-    <div className="bg-gray-900 min-h-screen py-12 px-4">
+    <div className="bg-gray-900 min-h-screen py-12 px-2 sm:px-4">
       <h1 className="text-4xl font-bold text-white text-center mb-12">
         My Work <span className="text-purple-400">Experience</span>
       </h1>
       <div className="relative w-full max-w-5xl mx-auto">
-        {/* Vertical Timeline Line */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 h-full border-l-4 border-white"></div>
+        {/* Vertical Timeline Line - Hidden on mobile, visible on md+ screens */}
+        <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full border-l-4 border-white"></div>
+        
+        {/* Mobile timeline line - aligned through logo centers */}
+        <div className="md:hidden absolute left-6 sm:left-8 h-full border-l-4 border-white"></div>
+        
         {experiences.map((exp, index) => (
           <div
             key={index}
-            className={`flex items-center mb-20 ${index % 2 === 0 ? 'flex-row-reverse' : ''}`}
+            className={`flex flex-col md:flex-row items-start md:items-center mb-20 ${
+              index % 2 === 0 ? 'md:flex-row-reverse' : ''
+            }`}
           >
-            {/* Logo on Timeline */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 bg-gray-900 border border-white rounded-full shadow-lg flex items-center justify-center w-24 h-24">
+            {/* Logo on Timeline - Centered on the timeline on both mobile and desktop */}
+            <div className="absolute left-6 sm:left-8 md:left-1/2 transform -translate-x-1/2 md:-translate-x-1/2 bg-gray-900 border border-white rounded-full shadow-lg flex items-center justify-center w-12 sm:w-16 md:w-24 h-12 sm:h-16 md:h-24">
               <img
                 src={exp.logo}
                 alt={`${exp.company} logo`}
@@ -74,20 +80,23 @@ const WorkExperience: React.FC = () => {
               />
             </div>
 
-            {/* Content */}
+            {/* Content - Full width on mobile, alternating on desktop */}
             <div
-              className={`w-5/12 px-8 ${index % 2 === 0 ? 'text-right' : 'text-left'} text-white`}
+              className={`ml-16 sm:ml-24 md:ml-0 w-[calc(100%-3rem)] sm:w-[calc(100%-7rem)] md:w-5/12 px-2 sm:px-4 md:px-8 text-left ${
+                index % 2 === 0 ? 'md:text-right' : 'md:text-left'
+              } text-white`}
             >
-              <h2 className="text-3xl font-semibold text-purple-400">{exp.company}</h2>
-              <h3 className="text-xl font-semibold">{exp.title}</h3>
-              <p className="text-gray-400 text-sm mb-1">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-purple-400">{exp.company}</h2>
+              <h3 className="text-lg md:text-xl font-semibold">{exp.title}</h3>
+              <p className="text-gray-400 text-xs sm:text-sm mb-1">
                 {exp.date} – {exp.location}
               </p>
               {exp.bulletPoints.length > 0 && (
-                <ul className="list-disc mt-4 space-y-2">
+                <ul className="mt-4 space-y-3 md:list-disc">
                   {exp.bulletPoints.map((point, i) => (
-                    <li key={i} className="text-gray-300">
-                      {point}
+                    <li key={i} className="text-gray-300 text-xs sm:text-sm md:text-base relative pl-3 sm:pl-4">
+                      <span className="md:hidden absolute left-0 top-[0.4em]">•</span>
+                      <span className="break-words">{point}</span>
                     </li>
                   ))}
                 </ul>
