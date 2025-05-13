@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { TypeAnimation } from 'react-type-animation';
 import { FaCode, FaDatabase, FaServer, FaBrain, FaGithub, FaLinkedin } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import psychaide from '../assets/psychaide.png';
 
 // Computer component with improved visuals
@@ -218,6 +218,8 @@ const About: React.FC = () => {
     }
   ];
 
+  const navigate = useNavigate();
+
   return (
     <div className="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white min-h-screen">
       {/* Hero Section with enhanced animations */}
@@ -311,7 +313,7 @@ const About: React.FC = () => {
             
             <div className="mt-10 flex gap-4">
               <motion.a 
-                href="/resume" 
+                onClick={() => navigate('/resume')} 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="inline-block px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full text-white font-medium hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
