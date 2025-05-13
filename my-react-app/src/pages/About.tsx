@@ -481,14 +481,6 @@ const About: React.FC = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <motion.a 
-              href="/projects"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full text-white font-medium hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
-            >
-              View Projects
-            </motion.a>
-            <motion.a 
               href="mailto:danieljcohen0@gmail.com"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
