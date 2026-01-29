@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { TypeAnimation } from 'react-type-animation';
-import { FaCode, FaDatabase, FaServer, FaBrain, FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FaCode, FaDatabase, FaServer, FaBrain, FaGithub, FaLinkedin, FaTools } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import psychaide from '../assets/psychaide.png';
@@ -199,12 +199,12 @@ const About: React.FC = () => {
     {
       name: "Backend",
       icon: <FaServer className="text-purple-500 text-2xl" />,
-      skills: ["Python", "Java", "C", "C++", "Node.js", "REST APIs"]
+      skills: ["Python", "Java", "C", "C++", "Node.js", "FastAPI", "WebSockets", "WebRTC"]
     },
     {
       name: "Frontend",
       icon: <FaCode className="text-purple-500 text-2xl" />,
-      skills: ["React", "Javascript", "TypeScript", "Next.js", "TailwindCSS", "HTML/CSS"]
+      skills: ["React", "Javascript", "TypeScript", "Next.js", "TailwindCSS", "D3.js"]
     },
     {
       name: "Database",
@@ -215,6 +215,11 @@ const About: React.FC = () => {
       name: "AI/ML",
       icon: <FaBrain className="text-purple-500 text-2xl" />,
       skills: ["TensorFlow", "PyTorch", "NLP", "Computer Vision"]
+    },
+    {
+      name: "DevOps & Tools",
+      icon: <FaTools className="text-purple-500 text-2xl" />,
+      skills: ["Docker", "AWS CDK", "Playwright", "Git", "Fly.io"]
     }
   ];
 
@@ -365,7 +370,7 @@ const About: React.FC = () => {
             <span className="block h-1 w-20 bg-purple-500 mt-2 mx-auto"></span>
           </motion.h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {skillCategories.map((category, index) => (
               <motion.div 
                 key={index}
