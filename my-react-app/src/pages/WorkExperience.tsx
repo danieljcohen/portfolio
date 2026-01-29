@@ -11,7 +11,11 @@ const WorkExperience: React.FC = () => {
       date: 'May 2025 – Aug 2025',
       company: 'Amazon (AWS)',
       location: 'New York, NY',
-      bulletPoints: [], // No specific bullets provided yet
+      bulletPoints: [
+        'Redesigned the Playwright-based integration test architecture for Federated Connections on the SageMaker Unified Studio team, reducing test flakiness and on-call workload by 93%.',
+        'Built scalable infrastructure using AWS CDK to support additional connectors, deploying Amazon-hosted databases, test data, and a secret replicator for third-party credentials across regions.',
+        'Expanded test coverage by 400% while reducing testing costs by 12%, enabling broader, more efficient testing.',
+      ],
       logo: awsLogo,
     },
     {
