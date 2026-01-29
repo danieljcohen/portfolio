@@ -6,9 +6,7 @@ import linear from '../../assets/linear.png';
 import arcGIS from '../../assets/arcGIS.png';
 import pathPetal from '../../assets/pathPetal.png';
 import psychaide from '../../assets/psychaide.png';
-
-// You'll need to add an image for PsychAIde
-// import psychAIde from '../../assets/psychAIde.png';
+import beattorrent from '../../assets/beattorrent.png';
 
 
 // Define the project structure using TypeScript
@@ -24,6 +22,16 @@ interface Project {
 
 const Projects: React.FC = () => {
   const projects: Project[] = [
+    {
+      imgPath: beattorrent, // Placeholder - replace with BeatTorrent image
+      title: "BeatTorrent",
+      date: "Nov 2025",
+      description:
+        "A distributed peer-to-peer music streaming platform using WebRTC for direct chunk transfer between peers, implementing a BitTorrent-inspired protocol with real-time D3.js mesh topology visualization.",
+      route: "beattorrent",
+      technologies: ["Python", "FastAPI", "WebRTC", "JavaScript", "D3.js"],
+      githubUrl: "https://github.com/danieljcohen/beat-torrent"
+    },
     {
       imgPath: psychaide, // Replace with actual image
       title: "PsychAIde",

@@ -6,8 +6,7 @@ import linear from '../../assets/linear.png';
 import arcGIS from '../../assets/arcGIS.png';
 import pathPetal from '../../assets/pathPetal.png';
 import psychaide from '../../assets/psychaide.png';
-// You'll need to add an image for PsychAIde
-// import psychAIde from '../../assets/psychAIde.png';
+import beattorrent from '../../assets/beattorrent.png';
 
 
 
@@ -33,6 +32,37 @@ const ProjectDetail: React.FC = () => {
   const navigate = useNavigate();
 
   const projectDetails: Record<string, ProjectDetails> = {
+    'beattorrent': {
+      title: 'BeatTorrent',
+      date: 'Nov 2025',
+      imgPath: beattorrent, 
+      description: 'A distributed peer-to-peer music streaming system where peers collaboratively stream audio chunks from one another using WebRTC, minimizing server bandwidth while enabling distributed content delivery.',
+      challenge: 'Traditional music streaming relies on centralized servers, creating high bandwidth costs and single points of failure. Additionally, keeping multiple listeners synchronized during collaborative playback is challenging.',
+      solution: 'Built a BitTorrent-inspired P2P streaming system using WebRTC DataChannels for direct peer-to-peer chunk transfer, with a WebSocket signaling server handling only control signals and peer discovery.',
+      features: [
+        'WebRTC DataChannels for direct peer-to-peer audio chunk transfer',
+        'BitTorrent-inspired chunk distribution with bitmap-based piece availability and rarity-weighted selection',
+        'Multi-phase scheduling (startup, stable, endgame) for optimal download performance',
+        'Browser-based playback using Media Source Extensions (MSE) with automatic rebuffering',
+        'Playback synchronization across peers with drift correction (±100ms accuracy)',
+        'TURN server fallback for NAT traversal on restrictive networks',
+        'Real-time D3.js network visualization of P2P mesh topology'
+      ],
+      technologies: [
+        'Python',
+        'FastAPI',
+        'WebSockets',
+        'JavaScript (ES6 Modules)',
+        'WebRTC',
+        'Media Source Extensions (MSE)',
+        'D3.js',
+        'Docker',
+        'Fly.io'
+      ],
+      outcome: 'Deployed a fully functional P2P streaming platform that reduces server bandwidth by enabling direct peer-to-peer content delivery while maintaining synchronized playback across all connected viewers.',
+      githubUrl: 'https://github.com/danieljcohen/beat-torrent',
+      websiteUrl: 'https://beat-torrent.fly.dev/'
+    },
     'psychaide': {
       title: 'PsychAIde',
       date: 'Jan-May 2025',
