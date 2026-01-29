@@ -7,7 +7,7 @@ import goliathLogo from '../assets/goliath.jpg';
 const WorkExperience: React.FC = () => {
   const experiences = [
     {
-      title: 'Incoming Software Engineer Intern',
+      title: 'Software Engineer Intern',
       date: 'May 2025 – Aug 2025',
       company: 'Amazon (AWS)',
       location: 'New York, NY',
