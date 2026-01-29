@@ -305,7 +305,7 @@ const About: React.FC = () => {
             </h2>
             
             <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-              I'm a software engineer who is currently a rising senior studying Computer Science and Statistics at Duke University. 
+              I'm a software engineer who is currently a senior studying Computer Science and Statistics at Duke University. 
             </p>
             
             <p className="text-gray-300 text-lg mb-6 leading-relaxed">
