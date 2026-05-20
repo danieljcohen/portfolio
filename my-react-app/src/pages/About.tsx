@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Environment, Float } from '@react-three/drei';
-import * as THREE from 'three';
+import React, { useEffect, useRef, useState } from 'react';
+import createGlobe, { type COBEOptions } from 'cobe';
 import {
   FaGithub,
   FaLinkedin,
@@ -17,165 +15,366 @@ import smartMirror from '../assets/smartMirror.png';
 import Spotlight from '../components/Spotlight';
 import MagneticButton from '../components/MagneticButton';
 
-/* ==========================================================================
- * 3D Scene (preserved from previous version)
- * ==========================================================================*/
-const Computer: React.FC = () => {
-  const computerRef = useRef<THREE.Group>(null);
-  useFrame((state) => {
-    if (computerRef.current) {
-      computerRef.current.position.y = Math.sin(state.clock.getElapsedTime()) * 0.04;
-      computerRef.current.rotation.y =
-        Math.sin(state.clock.getElapsedTime() * 0.3) * 0.08;
-    }
-  });
-
-  const codeTexture = useMemo(() => createCodeTexture(), []);
-
-  return (
-    <group ref={computerRef}>
-      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
-        <boxGeometry args={[2, 1.3, 0.1]} />
-        <meshStandardMaterial color="#0b0b14" metalness={0.85} roughness={0.18} />
-        <mesh position={[0, 0, 0.06]} castShadow>
-          <boxGeometry args={[1.85, 1.15, 0.01]} />
-          <meshStandardMaterial color="#0a0a18" emissive="#1a0e3a" emissiveIntensity={0.5} />
-          <mesh position={[0, 0, 0.01]}>
-            <planeGeometry args={[1.78, 1.08]} />
-            <meshBasicMaterial>
-              <canvasTexture attach="map" image={codeTexture} needsUpdate />
-            </meshBasicMaterial>
-          </mesh>
-        </mesh>
-      </mesh>
-
-      <mesh position={[0, -0.2, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.2, 0.4, 0.1]} />
-        <meshStandardMaterial color="#0a0a14" metalness={0.7} roughness={0.3} />
-      </mesh>
-
-      <mesh position={[0, -0.5, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.6, 0.1, 0.4]} />
-        <meshStandardMaterial color="#0a0a14" metalness={0.7} roughness={0.3} />
-      </mesh>
-
-      <mesh position={[0, -0.6, 0.6]} castShadow receiveShadow>
-        <boxGeometry args={[1.6, 0.05, 0.6]} />
-        <meshStandardMaterial color="#16161e" metalness={0.55} roughness={0.5} />
-        <group position={[0, 0.03, 0]}>
-          {Array.from({ length: 6 }).map((_, row) =>
-            Array.from({ length: 15 }).map((_, col) => (
-              <mesh
-                key={`${row}-${col}`}
-                position={[(col - 7) * 0.1, 0, (row - 2.5) * 0.09]}
-                scale={[0.08, 0.01, 0.07]}
-              >
-                <boxGeometry />
-                <meshStandardMaterial color="#222" />
-              </mesh>
-            )),
-          )}
-        </group>
-      </mesh>
-
-      <mesh
-        position={[1.2, -0.6, 0.6]}
-        castShadow
-        receiveShadow
-        rotation={[0, 0, 0]}
-      >
-        <capsuleGeometry args={[0.08, 0.2, 4, 8]} />
-        <meshStandardMaterial color="#16161e" metalness={0.55} roughness={0.5} />
-      </mesh>
-
-      <Float speed={1.2} floatIntensity={1.4} rotationIntensity={0.5}>
-        <mesh position={[-1.6, 0.4, -0.6]} rotation={[0.5, 0.5, 0]}>
-          <torusGeometry args={[0.25, 0.02, 16, 64]} />
-          <meshStandardMaterial color="#a078ff" emissive="#5a2bff" emissiveIntensity={0.8} />
-        </mesh>
-      </Float>
-      <Float speed={1.6} floatIntensity={1.2} rotationIntensity={0.6}>
-        <mesh position={[1.7, 1, -0.4]} rotation={[0.3, 0.2, 0.4]}>
-          <icosahedronGeometry args={[0.18, 0]} />
-          <meshStandardMaterial color="#22d3ee" emissive="#0ea5e9" emissiveIntensity={0.5} wireframe />
-        </mesh>
-      </Float>
-    </group>
-  );
+type CityMarker = {
+  name: string;
+  role: string;
+  location: [number, number];
+  size: number;
 };
 
-const createCodeTexture = () => {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d')!;
-  ctx.fillStyle = '#0a0a18';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+// Locations I'm from / have worked / studied. `size` is in cobe units
+// (sphere radius = 1). NYC is slightly larger because it represents two
+// employers (AWS + Google).
+const CITIES: CityMarker[] = [
+  {
+    name: 'Fort Lauderdale, FL',
+    role: 'Hometown',
+    location: [26.1224, -80.1373],
+    size: 0.05,
+  },
+  {
+    name: 'Durham, NC',
+    role: 'Duke · May 2022 – 2026',
+    location: [35.994, -78.8986],
+    size: 0.05,
+  },
+  {
+    name: 'Edinburgh, UK',
+    role: 'Univ. of Edinburgh · Study abroad',
+    location: [55.9533, -3.1883],
+    size: 0.05,
+  },
+  {
+    name: 'Redlands, CA',
+    role: 'Esri · Summer 2024',
+    location: [34.0556, -117.1825],
+    size: 0.05,
+  },
+  {
+    name: 'New York, NY',
+    role: 'AWS · Google',
+    location: [40.7128, -74.006],
+    size: 0.07,
+  },
+];
 
-  const lines = [
-    'import { build, ship } from "daniel";',
-    '',
-    'const Portfolio = async () => {',
-    '  const [ideas, set] = useState([]);',
-    '',
-    '  useEffect(() => {',
-    '    fetch("/now").then(r => r.json())',
-    '      .then(set);',
-    '  }, []);',
-    '',
-    '  return ideas.map(make => (',
-    '    <Project key={make.id}>',
-    '      {make.delight}',
-    '    </Project>',
-    '  ));',
-    '};',
-    '',
-    'export default Portfolio;',
+// Limits for camera tilt and zoom.
+const THETA_LIMIT = Math.PI / 2 - 0.1; // just shy of looking straight down
+const SCALE_MIN = 0.6;
+const SCALE_MAX = 2.5;
+
+// Project a [lat, lng] marker to canvas-local CSS pixels using cobe's own
+// rotation math (extracted from cobe v2.0.1's `O(t)` projection function).
+// Returns `visible: false` when the marker is on the back hemisphere.
+const projectMarker = (
+  location: [number, number],
+  phi: number,
+  theta: number,
+  scale: number,
+  cssSize: number,
+) => {
+  const latR = (location[0] * Math.PI) / 180;
+  const lngR = (location[1] * Math.PI) / 180 - Math.PI;
+  const cLat = Math.cos(latR);
+  const v: [number, number, number] = [
+    -cLat * Math.cos(lngR),
+    Math.sin(latR),
+    cLat * Math.sin(lngR),
   ];
+  const cT = Math.cos(theta);
+  const sT = Math.sin(theta);
+  const cP = Math.cos(phi);
+  const sP = Math.sin(phi);
+  const x = cP * v[0] + sP * v[2];
+  const y = sP * sT * v[0] + cT * v[1] - cP * sT * v[2];
+  const z = -sP * cT * v[0] + sT * v[1] + cP * cT * v[2];
+  return {
+    x: ((x * scale + 1) / 2) * cssSize,
+    y: ((-y * scale + 1) / 2) * cssSize,
+    visible: z >= 0,
+  };
+};
 
-  ctx.font = '14px "JetBrains Mono", monospace';
-  const colors = {
-    keywords: '#c4a8ff',
-    functions: '#7ee787',
-    strings: '#f9d77a',
-    constants: '#bd93f9',
-    brackets: '#e6e6f0',
-    default: '#79c0ff',
-    jsx: '#ff9bb3',
-    comments: '#6e7681',
+const Globe: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  // Drag state snapshot taken at pointer-down. Storing the rotation values
+  // *at that moment* lets us compute the new rotation as
+  //   newDragX = dragX0 + pixelDelta / sensitivity
+  // which is unit-correct and won't drift between successive drags.
+  const dragStartRef = useRef<{
+    clientX: number;
+    clientY: number;
+    dragX0: number;
+    dragY0: number;
+  } | null>(null);
+  // Accumulated drag offsets (radians). dragX adds to phi; dragY *is* theta.
+  const dragXRef = useRef(0);
+  const dragYRef = useRef(0);
+  const scaleRef = useRef(1);
+
+  // Track pointer-down position so we can distinguish a click from a drag.
+  const pointerDownPos = useRef<{ x: number; y: number } | null>(null);
+  // Shared between the rAF loop and pointer handlers / hit-tests.
+  const phiRef = useRef(0);
+  const sizeRef = useRef(0);
+  const selectedRef = useRef<CityMarker | null>(null);
+  const [selected, setSelected] = useState<CityMarker | null>(null);
+
+  // Keep the ref in sync with state so the rAF loop can read it without
+  // needing to be torn down/re-created.
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const wrapper = wrapperRef.current;
+    // The flex container with the p-6 padding owns the available space.
+    const flexParent = wrapper?.parentElement;
+    if (!canvas || !wrapper || !flexParent) return;
+
+    let phi = 0;
+    let size = 0;
+    let rafId: number | null = null;
+    let globeInstance: ReturnType<typeof createGlobe> | null = null;
+    let cancelled = false;
+    let initTimer: number | null = null;
+    const dpr = window.devicePixelRatio || 2;
+
+    const buildOptions = (): COBEOptions => ({
+      devicePixelRatio: dpr,
+      width: size * dpr,
+      height: size * dpr,
+      phi: 0,
+      theta: 0,
+      dark: 1,
+      diffuse: 1.2,
+      scale: 1,
+      mapSamples: 16000,
+      mapBrightness: 6,
+      baseColor: [0.3, 0.3, 0.3],
+      markerColor: [1, 0.5, 1],
+      glowColor: [1, 1, 1],
+      offset: [0, 0],
+      markers: CITIES.map(({ location, size }) => ({ location, size })),
+    });
+
+    const applySize = (next: number) => {
+      size = next;
+      sizeRef.current = next;
+      canvas.style.width = `${next}px`;
+      canvas.style.height = `${next}px`;
+      wrapper.style.width = `${next}px`;
+      wrapper.style.height = `${next}px`;
+    };
+
+    const init = () => {
+      if (cancelled || globeInstance || size <= 0) return;
+      globeInstance = createGlobe(canvas, buildOptions());
+
+      // cobe v2.0.1 has no internal render loop, so we drive frames ourselves.
+      // Auto-rotation pauses while the user is dragging.
+      const tick = () => {
+        if (cancelled || !globeInstance) return;
+        if (dragStartRef.current === null) {
+          phi += 0.001; // ~one revolution per ~105s
+        }
+        const totalPhi = phi + dragXRef.current;
+        const theta = dragYRef.current;
+        const scale = scaleRef.current;
+        phiRef.current = totalPhi;
+        globeInstance.update({ phi: totalPhi, theta, scale });
+
+        // Move the tooltip to follow the selected marker.
+        const tip = tooltipRef.current;
+        const sel = selectedRef.current;
+        if (tip) {
+          if (sel) {
+            const proj = projectMarker(sel.location, totalPhi, theta, scale, size);
+            if (proj.visible) {
+              tip.style.transform = `translate(${proj.x}px, ${proj.y}px) translate(-50%, calc(-100% - 14px))`;
+              tip.style.opacity = '1';
+            } else {
+              tip.style.opacity = '0';
+            }
+          } else {
+            tip.style.opacity = '0';
+          }
+        }
+
+        rafId = requestAnimationFrame(tick);
+      };
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const ro = new ResizeObserver((entries) => {
+      const rect = entries[0]?.contentRect;
+      if (!rect) return;
+      // Largest square that fits the parent's content box.
+      const next = Math.floor(Math.min(rect.width, rect.height));
+      if (next <= 0 || next === size) return;
+      applySize(next);
+      if (globeInstance) {
+        globeInstance.update({
+          width: size * dpr,
+          height: size * dpr,
+        });
+      } else if (initTimer === null) {
+        // Defer one tick so StrictMode's first-mount cleanup finishes before
+        // we create a new WebGL context on the same canvas.
+        initTimer = window.setTimeout(() => {
+          initTimer = null;
+          init();
+        }, 0);
+      }
+    });
+    ro.observe(flexParent);
+
+    // Wheel zoom. We attach via addEventListener with { passive: false } so
+    // we can preventDefault — React's onWheel is passive and can't stop the
+    // page from scrolling while the cursor is over the globe.
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.08 : 1 / 1.08;
+      scaleRef.current = Math.min(
+        SCALE_MAX,
+        Math.max(SCALE_MIN, scaleRef.current * factor),
+      );
+    };
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+
+    return () => {
+      cancelled = true;
+      if (initTimer !== null) clearTimeout(initTimer);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      globeInstance?.destroy();
+      ro.disconnect();
+      canvas.removeEventListener('wheel', onWheel);
+    };
+  }, []);
+
+  const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    // Snapshot the current rotation so we can compute the new value as
+    // (snapshot + pixelDelta / sensitivity). This avoids the radians/pixels
+    // unit mismatch that made successive drags drift.
+    dragStartRef.current = {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      dragX0: dragXRef.current,
+      dragY0: dragYRef.current,
+    };
+    pointerDownPos.current = { x: e.clientX, y: e.clientY };
+    const c = canvasRef.current;
+    if (c) {
+      c.style.cursor = 'grabbing';
+      c.setPointerCapture(e.pointerId);
+    }
+  };
+  const endDrag = (e?: React.PointerEvent<HTMLCanvasElement>) => {
+    dragStartRef.current = null;
+    const c = canvasRef.current;
+    if (c) {
+      c.style.cursor = 'grab';
+      if (e) {
+        try {
+          c.releasePointerCapture(e.pointerId);
+        } catch {
+          /* pointer was already released */
+        }
+      }
+    }
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const start = dragStartRef.current;
+    if (!start) return;
+    // 200 px of drag ≈ 1 radian (~57°). Both axes use the same sign convention
+    // so the surface follows the cursor: drag right → spins right, drag up →
+    // tilts up (front-facing points move up on screen).
+    dragXRef.current = start.dragX0 + (e.clientX - start.clientX) / 200;
+    const rawTheta = start.dragY0 + (e.clientY - start.clientY) / 200;
+    dragYRef.current = Math.max(-THETA_LIMIT, Math.min(THETA_LIMIT, rawTheta));
+  };
+  // On pointerup, if the pointer barely moved we treat it as a click and
+  // hit-test against the markers; otherwise it was a drag and we just end it.
+  const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const down = pointerDownPos.current;
+    pointerDownPos.current = null;
+    const moved = down
+      ? Math.hypot(e.clientX - down.x, e.clientY - down.y)
+      : 0;
+    endDrag(e);
+
+    if (moved >= 5) return; // it was a drag, not a click
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    const size = sizeRef.current;
+    const totalPhi = phiRef.current;
+    const theta = dragYRef.current;
+    const scale = scaleRef.current;
+
+    let best: CityMarker | null = null;
+    // Hit radius grows with zoom so dots stay equally easy to tap.
+    let bestDist = Math.max(22, size * 0.05) * scale;
+    for (const c of CITIES) {
+      const proj = projectMarker(c.location, totalPhi, theta, scale, size);
+      if (!proj.visible) continue;
+      const d = Math.hypot(proj.x - cx, proj.y - cy);
+      if (d < bestDist) {
+        bestDist = d;
+        best = c;
+      }
+    }
+    setSelected((prev) => (best && prev !== best ? best : null));
   };
 
-  lines.forEach((line, index) => {
-    const y = 24 + index * 22;
-    let x = 22;
-    const parts = line.split(
-      /(import|from|const|let|function|return|useEffect|useState|=>|{|}|\(|\)|<|>|\/\/.*$|".*?"|'.*?'|=|,|;|\.|className)/g,
-    );
-    parts.forEach((part) => {
-      if (!part) return;
-      if (/import|from|const|let|function|return|useEffect|useState|=>|async/.test(part)) {
-        ctx.fillStyle = colors.keywords;
-      } else if (/".*?"|'.*?'/.test(part)) {
-        ctx.fillStyle = colors.strings;
-      } else if (/\{|\}|\(|\)|<|>|=|,|;|\./.test(part)) {
-        ctx.fillStyle = colors.brackets;
-      } else if (/[A-Z][a-zA-Z]+/.test(part)) {
-        ctx.fillStyle = colors.constants;
-      } else if (/className/.test(part)) {
-        ctx.fillStyle = colors.jsx;
-      } else if (/\/\/.*$/.test(part)) {
-        ctx.fillStyle = colors.comments;
-      } else if (/\w+\(/.test(part)) {
-        ctx.fillStyle = colors.functions;
-      } else {
-        ctx.fillStyle = colors.default;
-      }
-      ctx.fillText(part, x, y);
-      x += ctx.measureText(part).width;
-    });
-  });
-
-  return canvas;
+  return (
+    <div
+      ref={wrapperRef}
+      style={{ position: 'relative', margin: 'auto' }}
+    >
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: 'block',
+          cursor: 'grab',
+          touchAction: 'none',
+        }}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerCancel={endDrag}
+        onPointerLeave={endDrag}
+        onPointerMove={onPointerMove}
+      />
+      {/* Floating tooltip — positioned by the rAF loop via inline transform.
+          Pointer-events:none so it never blocks dot clicks. */}
+      <div
+        ref={tooltipRef}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          opacity: 0,
+          pointerEvents: 'none',
+          transition: 'opacity 180ms ease',
+          willChange: 'transform, opacity',
+        }}
+      >
+        {selected && (
+          <div className="whitespace-nowrap rounded-lg border border-white/15 bg-ink-950/90 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/85 shadow-lg backdrop-blur">
+            <div className="text-white">{selected.name}</div>
+            <div className="text-white/55">{selected.role}</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 /* ==========================================================================
@@ -327,31 +526,21 @@ const About: React.FC = () => {
               transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="relative h-[420px] overflow-hidden rounded-3xl border border-white/10 bg-ink-900/40 lg:col-span-5"
             >
-              <Canvas shadows camera={{ position: [0, 0, 4], fov: 50 }}>
-                <color attach="background" args={['#0b0b14']} />
-                <fog attach="fog" args={['#0b0b14', 3, 10]} />
-                <Suspense fallback={null}>
-                  <ambientLight intensity={0.5} />
-                  <spotLight
-                    position={[5, 5, 5]}
-                    intensity={0.9}
-                    castShadow
-                    penumbra={1}
-                    color="#bba8ff"
-                  />
-                  <directionalLight position={[-5, 5, -5]} intensity={0.4} />
-                  <Computer />
-                  <Environment preset="city" />
-                  <OrbitControls
-                    enableZoom={false}
-                    enablePan={false}
-                    autoRotate
-                    autoRotateSpeed={0.6}
-                    maxPolarAngle={Math.PI / 2.1}
-                    minPolarAngle={Math.PI / 3}
-                  />
-                </Suspense>
-              </Canvas>
+              <div className="absolute inset-0 flex items-center justify-center p-6">
+                <Globe />
+              </div>
+
+              {/* Title strip */}
+              <div className="pointer-events-none absolute left-5 top-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-white/45">
+                <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
+                Where I'm from · worked · studied
+              </div>
+
+              {/* Interaction hints */}
+              <div className="pointer-events-none absolute bottom-5 left-5 right-5 flex items-end justify-between gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35">
+                <span>Tap a pin</span>
+                <span className="hidden sm:block">Drag · scroll to zoom</span>
+              </div>
             </motion.div>
           </div>
         </section>
