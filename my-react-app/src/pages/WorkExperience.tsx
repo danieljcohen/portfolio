@@ -4,6 +4,7 @@ import esriLogo from '../assets/esri.png';
 import awsLogo from '../assets/aws.svg';
 import dukeLogo from '../assets/duke.png';
 import goliathLogo from '../assets/goliath.jpg';
+import googleLogo from '../assets/google.png';
 
 interface Experience {
   title: string;
@@ -13,9 +14,21 @@ interface Experience {
   bulletPoints: string[];
   logo: string;
   tags: string[];
+  // 'photo' (default) fills the circle; 'icon' pads + white bg for vector marks
+  logoVariant?: 'photo' | 'icon';
 }
 
 const experiences: Experience[] = [
+  {
+    title: 'Software Engineer',
+    date: 'Aug 2026 – Present',
+    company: 'Google',
+    location: 'New York, NY',
+    bulletPoints: ['Incoming Software Engineer.'],
+    logo: googleLogo,
+    tags: [],
+    logoVariant: 'icon',
+  },
   {
     title: 'Software Engineer Intern',
     date: 'May 2025 – Aug 2025',
@@ -98,11 +111,19 @@ const TimelineItem: React.FC<{ exp: Experience; index: number }> = ({ exp, index
           className="relative"
         >
           <div className="absolute inset-0 -m-2 rounded-full bg-accent-500/20 blur-md" />
-          <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border-2 border-white/40 bg-ink-900 ring-1 ring-black/40 sm:h-16 sm:w-16 md:h-20 md:w-20">
+          <div
+            className={`relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border-2 ring-1 ring-black/40 sm:h-16 sm:w-16 md:h-20 md:w-20 ${
+              exp.logoVariant === 'icon'
+                ? 'border-black/15 bg-white p-0.5 sm:p-0.5 md:p-1'
+                : 'border-white/40 bg-ink-900'
+            }`}
+          >
             <img
               src={exp.logo}
               alt={`${exp.company} logo`}
-              className="h-full w-full object-cover"
+              className={`h-full w-full ${
+                exp.logoVariant === 'icon' ? 'object-contain' : 'object-cover'
+              }`}
             />
           </div>
         </motion.div>
