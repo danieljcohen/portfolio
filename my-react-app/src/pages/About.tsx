@@ -407,7 +407,7 @@ const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-ink-900/40 transition-colors hover:border-white/25 lg:col-span-2 lg:row-span-2"
+            className="group relative h-[420px] overflow-hidden rounded-2xl border border-white/10 bg-ink-900/40 transition-colors hover:border-white/25 sm:h-[480px] lg:col-span-2 lg:row-span-2 lg:h-auto"
           >
             <Link to="/projects/beattorrent" className="block h-full w-full">
               <img
@@ -462,7 +462,7 @@ const About: React.FC = () => {
                 delay: 0.08 + i * 0.06,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-ink-900/40 transition-colors hover:border-white/25"
+              className="group relative h-[280px] overflow-hidden rounded-2xl border border-white/10 bg-ink-900/40 transition-colors hover:border-white/25 sm:h-[320px] lg:h-auto"
             >
               <Link to={`/projects/${p.route}`} className="block h-full w-full">
                 <img
