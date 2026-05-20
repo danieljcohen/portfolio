@@ -12,6 +12,8 @@ import psychaide from '../../assets/psychaide.png';
 import beattorrent from '../../assets/beattorrent.png';
 import smartMirror from '../../assets/smartMirror.png';
 
+type ProjectCategory = 'Web' | 'AI/ML' | 'Systems' | 'Hackathon';
+
 interface Project {
   imgPath: string;
   title: string;
@@ -21,7 +23,7 @@ interface Project {
   technologies: string[];
   githubUrl?: string;
   span: string;
-  category: 'Web' | 'AI/ML' | 'Systems' | 'Hackathon';
+  categories: ProjectCategory[];
 }
 
 const projects: Project[] = [
@@ -35,7 +37,7 @@ const projects: Project[] = [
     technologies: ['Python', 'React', 'Computer Vision', 'Raspberry Pi'],
     githubUrl: 'https://github.com/danieljcohen/smart_mirror',
     span: 'md:col-span-4 md:row-span-2',
-    category: 'AI/ML',
+    categories: ['Web', 'AI/ML'],
   },
   {
     imgPath: psychaide,
@@ -46,7 +48,7 @@ const projects: Project[] = [
     route: 'psychaide',
     technologies: ['Next.js', 'TypeScript', 'PostgreSQL', 'Azure AD'],
     span: 'md:col-span-2 md:row-span-2',
-    category: 'Web',
+    categories: ['Web'],
   },
   {
     imgPath: beattorrent,
@@ -58,7 +60,7 @@ const projects: Project[] = [
     technologies: ['Python', 'FastAPI', 'WebRTC', 'D3.js'],
     githubUrl: 'https://github.com/danieljcohen/beat-torrent',
     span: 'md:col-span-4 md:row-span-2',
-    category: 'Systems',
+    categories: ['Web', 'Systems'],
   },
   {
     imgPath: pathPetal,
@@ -70,7 +72,7 @@ const projects: Project[] = [
     technologies: ['React', 'Firebase', 'Flask'],
     githubUrl: 'https://github.com/Kethan-p/HackDuke2025',
     span: 'md:col-span-2 md:row-span-2',
-    category: 'Hackathon',
+    categories: ['Hackathon', 'AI/ML', 'Web'],
   },
   {
     imgPath: arcGIS,
@@ -82,7 +84,7 @@ const projects: Project[] = [
     technologies: ['YOLOv8', 'FastAPI', 'React'],
     githubUrl: 'https://github.com/danieljcohen/EsriHackathon',
     span: 'md:col-span-3',
-    category: 'AI/ML',
+    categories: ['AI/ML', 'Hackathon'],
   },
   {
     imgPath: linear,
@@ -94,7 +96,7 @@ const projects: Project[] = [
     technologies: ['Python', 'OCR', 'CV'],
     githubUrl: 'https://github.com/danieljcohen/Linear-Coding',
     span: 'md:col-span-3',
-    category: 'AI/ML',
+    categories: ['AI/ML'],
   },
   {
     imgPath: cpu,
@@ -105,7 +107,7 @@ const projects: Project[] = [
     route: 'logisim-cpu',
     technologies: ['Logisim', 'Architecture'],
     span: 'md:col-span-3',
-    category: 'Systems',
+    categories: ['Systems'],
   },
   {
     imgPath: huffman,
@@ -117,7 +119,7 @@ const projects: Project[] = [
     technologies: ['Java', 'Algorithms'],
     githubUrl: 'https://gitfront.io/r/user-4257705/ntyjaLzjW2Ff/huffman-compression/',
     span: 'md:col-span-3',
-    category: 'Systems',
+    categories: ['Systems'],
   },
 ];
 
@@ -128,7 +130,7 @@ const Projects: React.FC = () => {
   const [filter, setFilter] = useState<Category>('All');
 
   const visible = projects.filter(
-    (p) => filter === 'All' || p.category === filter,
+    (p) => filter === 'All' || p.categories.includes(filter as ProjectCategory),
   );
 
   return (
@@ -215,7 +217,7 @@ const ProjectTile: React.FC<{ project: Project; index: number }> = ({
         {/* Top meta */}
         <div className="absolute inset-x-5 top-5 flex items-start justify-between font-mono text-[10px] uppercase tracking-[0.25em] text-white/55">
           <span>{project.date}</span>
-          <span>{project.category}</span>
+          <span>{project.categories.join(' · ')}</span>
         </div>
 
         {/* Bottom content */}
