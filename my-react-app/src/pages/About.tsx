@@ -13,7 +13,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import psychaide from '../assets/psychaide.png';
 import beattorrent from '../assets/beattorrent.png';
-import pathPetal from '../assets/pathPetal.png';
+import smartMirror from '../assets/smartMirror.png';
 import Spotlight from '../components/Spotlight';
 import MagneticButton from '../components/MagneticButton';
 
@@ -183,18 +183,18 @@ const createCodeTexture = () => {
  * ==========================================================================*/
 const sideProjects = [
   {
-    img: beattorrent,
-    title: 'BeatTorrent',
-    blurb: 'P2P music streaming over WebRTC.',
-    date: 'Nov 2025',
-    route: 'beattorrent',
+    img: psychaide,
+    title: 'PsychAIde',
+    blurb: 'HIPAA-compliant platform for forensic psychologists.',
+    date: 'Jan – May 2025',
+    route: 'psychaide',
   },
   {
-    img: pathPetal,
-    title: 'Path & Petal',
-    blurb: '2nd place, HackDuke 2025.',
-    date: 'Feb 2025',
-    route: 'petal-path',
+    img: smartMirror,
+    title: 'Smart Mirror',
+    blurb: 'Raspberry Pi mirror with face recognition, gesture and voice control.',
+    date: 'Mar – May 2026',
+    route: 'smart-mirror',
   },
 ];
 
@@ -409,27 +409,28 @@ const About: React.FC = () => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="group relative overflow-hidden rounded-2xl border border-white/10 bg-ink-900/40 transition-colors hover:border-white/25 lg:col-span-2 lg:row-span-2"
           >
-            <Link to="/projects/psychaide" className="block h-full w-full">
+            <Link to="/projects/beattorrent" className="block h-full w-full">
               <img
-                src={psychaide}
-                alt="PsychAIde"
+                src={beattorrent}
+                alt="BeatTorrent"
                 className="absolute inset-0 h-full w-full object-cover opacity-60 transition-all duration-700 group-hover:scale-[1.03] group-hover:opacity-80"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/60 to-transparent" />
               <div className="absolute inset-x-7 top-7 flex items-start justify-between font-mono text-[10px] uppercase tracking-[0.25em] text-white/55">
-                <span>Jan – May 2025</span>
+                <span>Nov 2025</span>
                 <span>Featured</span>
               </div>
               <div className="absolute inset-x-7 bottom-7 flex flex-col gap-3">
                 <h3 className="text-3xl font-semibold leading-tight tracking-tight text-white md:text-4xl">
-                  PsychAIde
+                  BeatTorrent
                 </h3>
                 <p className="max-w-md text-sm text-white/65">
-                  HIPAA-compliant platform for forensic psychologists managing
-                  court-ordered evaluations. Used by 30+ active practitioners.
+                  Distributed peer-to-peer music streaming with WebRTC. A
+                  BitTorrent-inspired protocol with real-time D3.js mesh
+                  visualization.
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {['Next.js', 'TypeScript', 'PostgreSQL'].map((t) => (
+                  {['Python', 'FastAPI', 'WebRTC', 'D3.js'].map((t) => (
                     <span
                       key={t}
                       className="rounded-full border border-white/15 bg-black/30 px-2 py-0.5 text-[11px] font-medium text-white/70 backdrop-blur"
