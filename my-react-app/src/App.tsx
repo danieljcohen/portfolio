@@ -1,44 +1,52 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import About from './pages/About';
 import WorkExperience from './pages/WorkExperience';
 import Projects from './pages/Projects/Projects';
 import Resume from './pages/Resume';
 import ProjectDetail from './pages/Projects/ProjectDetail';
-import Footer from './Footer'; // Import the Footer component
+import Footer from './Footer';
+import Navigation from './components/Navigation';
+import ScrollProgress from './components/ScrollProgress';
+import AmbientBackground from './components/AmbientBackground';
+
+const AnimatedRoutes: React.FC = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<About />} />
+          <Route path="/work" element={<WorkExperience />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:projectName" element={<ProjectDetail />} />
+          <Route path="/resume" element={<Resume />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
-        {/* Navigation Bar - Updated for better mobile centering */}
-        <nav className="p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white flex flex-nowrap justify-center overflow-x-auto shadow-md">
-          <NavLink to="/" className="whitespace-nowrap px-3 sm:px-4 py-2 mx-1 text-center rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
-            About
-          </NavLink>
-          <NavLink to="/work" className="whitespace-nowrap px-3 sm:px-4 py-2 mx-1 text-center rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
-            Work Experience
-          </NavLink>
-          <NavLink to="/projects" className="whitespace-nowrap px-3 sm:px-4 py-2 mx-1 text-center rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
-            Projects
-          </NavLink>
-          <NavLink to="/resume" className="whitespace-nowrap px-3 sm:px-4 py-2 mx-1 text-center rounded-lg hover:bg-white hover:text-blue-600 transition duration-300">
-            Resume
-          </NavLink>
-        </nav>
+      <div className="grain relative flex min-h-screen flex-col bg-ink-950 text-white">
+        <AmbientBackground />
+        <ScrollProgress />
+        <Navigation />
 
-        {/* Main Content */}
-        <main className="flex-grow bg-gray-100">
-          <Routes>
-            <Route path="/" element={<About />} />
-            <Route path="/work" element={<WorkExperience />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:projectName" element={<ProjectDetail />} />
-            <Route path="/resume" element={<Resume />} />
-          </Routes>
+        <main className="relative z-10 flex-grow pt-24">
+          <AnimatedRoutes />
         </main>
 
-        {/* Footer */}
         <Footer />
       </div>
     </Router>

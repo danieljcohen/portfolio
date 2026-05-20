@@ -1,3 +1,178 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html,
+  body,
+  #root {
+    background-color: #08080c;
+    color: #f5f5f7;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgba(138, 92, 255, 0.4);
+    color: #ffffff;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #08080c;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #5a2bff, #8a5cff);
+    border-radius: 999px;
+    border: 2px solid #08080c;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #7340ff, #a078ff);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: 'Instrument Serif', ui-serif, Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Subtle film grain overlay (used as fixed layer) */
+  .grain::before {
+    content: '';
+    position: fixed;
+    inset: -50%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 220px 220px;
+  }
+
+  /* Gradient text helper */
+  .gradient-text {
+    background: linear-gradient(135deg, #ffffff 0%, #c8b2ff 60%, #8a5cff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Soft border that glows on hover */
+  .glow-border {
+    position: relative;
+    isolation: isolate;
+  }
+  .glow-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      130deg,
+      rgba(255, 255, 255, 0.15),
+      rgba(138, 92, 255, 0.55),
+      rgba(255, 255, 255, 0.05) 60%,
+      rgba(0, 212, 255, 0.4)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  /* Shiny hover (used by buttons) */
+  .shiny {
+    background-image: linear-gradient(
+      110deg,
+      transparent 25%,
+      rgba(255, 255, 255, 0.18) 50%,
+      transparent 75%
+    );
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* Soft inner highlight on cards */
+  .card-bevel {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+
+  /* Mask used to fade marquees on the edges */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+            mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+  }
+
+  /* Animated dotted grid */
+  .bg-dot-grid {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(255, 255, 255, 0.07) 1px,
+      transparent 0
+    );
+    background-size: 24px 24px;
+  }
+
+  /* Used for the resume page page */
+  .resume-page {
+    box-shadow: 0 30px 80px -20px rgba(138, 92, 255, 0.35);
+  }
+}
+
+/* Float animation used by hero particles */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; }
+  50% { transform: translateY(-30px) translateX(10px); opacity: 0.8; }
+}
+
+/* React-pdf overrides so the rendered PDF inherits theme */
+.react-pdf__Page {
+  background: white !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.react-pdf__Page__canvas {
+  border-radius: 12px;
+}
