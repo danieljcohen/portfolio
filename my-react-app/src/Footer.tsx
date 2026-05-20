@@ -118,7 +118,7 @@ const Footer: React.FC = () => {
             © {year} Daniel Cohen
           </div>
           <div className="font-mono uppercase tracking-[0.25em]">
-            Durham, NC · NYC
+            NYC
           </div>
         </div>
       </div>
