@@ -40,9 +40,6 @@ const Resume: React.FC = () => {
         <h1 className="text-balance text-5xl font-semibold tracking-tight text-white sm:text-6xl md:text-7xl">
           Resume
         </h1>
-        <p className="mx-auto mt-4 max-w-md text-sm text-white/50">
-          A printable snapshot of my experience, projects, and education.
-        </p>
 
         {/* Action bar */}
         <motion.div

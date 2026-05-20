@@ -233,7 +233,7 @@ const About: React.FC = () => {
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className="text-balance text-[clamp(2.75rem,8vw,6.5rem)] font-semibold leading-[0.95] tracking-tight text-white"
               >
-                Daniel Cohen.
+                Daniel Cohen
               </motion.h1>
 
               <motion.div
@@ -362,7 +362,7 @@ const About: React.FC = () => {
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-              Who I am.
+                Who I am
             </h2>
           </div>
           <div className="lg:col-span-7 lg:col-start-6">
@@ -386,7 +386,7 @@ const About: React.FC = () => {
       <section className="relative mx-auto max-w-7xl px-6 pb-24">
         <div className="mb-12 flex items-end justify-between gap-8">
           <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Selected work.
+            Selected work
           </h2>
           <Link
             to="/projects"
