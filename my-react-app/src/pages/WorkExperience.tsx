@@ -57,7 +57,7 @@ const experiences: Experience[] = [
   },
   {
     title: 'Software Engineer',
-    date: 'May 2024 – Present',
+    date: 'May 2024 – April 2025',
     company: 'Duke — Hickey Lab',
     location: 'Remote',
     bulletPoints: [
